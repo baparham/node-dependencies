@@ -7,19 +7,35 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  collect-dependency-versions:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.9.0, 16.9.1, 16.13.0, 16.13.1, 16.13.2, 16.x, 17.0.0, 17.0.1, 17.1.0, 17.2.0, 17.3.0, 17.3.1, 17.4.0, 17.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: node --version
-    - run: node -p process.versions
+    - run: node -p process.versions > ${{ matrix.node-version }}.json
+    - uses: actions/upload-artifact@v2
+      with:
+        name: deps-${{ matrix.node-version }}
+        path: ${{ matrix.node-version }}.json
+
+  merge-data:
+    runs-on: ubuntu-latest
+    needs: [collect-dependency-versions]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17.x
+      - uses: actions/download-artifact@v2
+        with:
+          path: collected-json
+      - name: Display json contents
+        run: find . '*.json' | xargs cat
+        working-directory: collected-json
