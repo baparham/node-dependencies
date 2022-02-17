@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  collect-dependency-versions:
+  collect:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: node -p process.versions > ${{ matrix.node-version }}.json
+    - run: node -p "JSON.stringify(process.versions)" > ${{ matrix.node-version }}.json
     - uses: actions/upload-artifact@v2
       with:
         name: deps-${{ matrix.node-version }}
@@ -26,7 +26,7 @@ jobs:
 
   merge-data:
     runs-on: ubuntu-latest
-    needs: [collect-dependency-versions]
+    needs: [collect]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 17.x
@@ -36,6 +36,5 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: collected-json
-      - name: Display json contents
-        run: find . '*.json' | xargs cat
-        working-directory: collected-json
+      - run: yarn install
+      - run: find ./collected-json -name '*.json' | xargs yarn merge dep-data.json
