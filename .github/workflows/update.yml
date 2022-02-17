@@ -24,7 +24,7 @@ jobs:
         name: deps-${{ matrix.node-version }}
         path: ${{ matrix.node-version }}.json
 
-  merge-data:
+  merge:
     runs-on: ubuntu-latest
     needs: [collect]
     steps:
@@ -38,3 +38,12 @@ jobs:
           path: collected-json
       - run: yarn install
       - run: find ./collected-json -name '*.json' | xargs yarn merge dep-data.json
+      - run: cat dep-data.json
+      - run: |
+          if [ "$(git status --porcelain)" = "" ]; then
+            echo "No new data, nothing to commit";
+            exit;
+          else
+            echo "Git contents change, needs new commit"
+            # TODO add git commit message here
+          fi
