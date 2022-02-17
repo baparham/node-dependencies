@@ -12,13 +12,21 @@ type NodeVersionMap = {
   [id: string]: DependencyVersionMap;
 };
 
-const mergedJson: NodeVersionMap = {};
+let mergedJson: NodeVersionMap = {};
 
 for (const filename of fileList) {
   const baseFilename = basename(filename);
   console.log('Processing', baseFilename);
-  const version = baseFilename.slice(0, baseFilename.length - 5);
-  mergedJson[version] = JSON.parse(readFileSync(filename).toString());
+  const jsonData = JSON.parse(readFileSync(filename).toString());
+  if (baseFilename === outputFilename) {
+    mergedJson = {
+      ...mergedJson,
+      ...jsonData,
+    };
+  } else {
+    const version = jsonData['node'];
+    mergedJson[version] = jsonData;
+  }
 }
 
 writeFileSync(outputFilename, JSON.stringify(mergedJson, null, 2));
