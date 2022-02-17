@@ -1,0 +1,8 @@
+{
+  "name": "node-dependencies",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/baparham/node-dependencies.git",
+  "author": "Brad Parham <baparham@gmail.com>",
+  "license": "MIT"
+}
