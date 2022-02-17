@@ -45,5 +45,9 @@ jobs:
             exit;
           else
             echo "Git contents change, needs new commit"
-            # TODO add git commit message here
+            git config user.email baparham@gmail.com
+            git config user.name Brad Parham
+            git add dep-data.json
+            git commit -m "Update dependency data"
+            git push
           fi
