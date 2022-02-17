@@ -9,13 +9,18 @@ on:
     # Run every two hours
     - cron:  '0 0/2 * * *'
   workflow_dispatch:
+    inputs:
+      specificNodeVersion:
+        description: Specific Node.js to add version data for
+        required: false
+        type: string
 
 jobs:
   collect:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.9.0, 16.9.1, 16.13.0, 16.13.1, 16.13.2, 16.x, 17.0.0, 17.0.1, 17.1.0, 17.2.0, 17.3.0, 17.3.1, 17.4.0, 17.x]
+        node-version: [16.x, 17.x, ${{ github.event.inputs.specificNodeVersion }}]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
