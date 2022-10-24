@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 17.x, 18.x]
+        node-version: [16.x, 17.x, 18.x, 19.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - run: node -p "JSON.stringify(process.versions)" > ${{ matrix.node-version }}.json
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: deps-${{ matrix.node-version }}
         path: ${{ matrix.node-version }}.json
@@ -34,10 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 17.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 17.x
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           path: collected-json
       - run: yarn install
