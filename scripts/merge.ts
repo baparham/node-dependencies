@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { basename } from 'path';
 
 const fileList = process.argv.slice(2);
-const outputFilename = 'dep-data.json';
+const outputFilename = 'index.json';
 
 type DependencyVersionMap = {
   [id: string]: string;

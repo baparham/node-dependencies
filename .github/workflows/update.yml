@@ -41,8 +41,8 @@ jobs:
         with:
           path: collected-json
       - run: yarn install
-      - run: find ./collected-json -name '*.json' | xargs yarn merge dep-data.json
-      - run: cat dep-data.json
+      - run: find ./collected-json -name '*.json' | xargs yarn merge index.json
+      - run: cat index.json
       - run: |
           if [ "$(git status --porcelain)" = "" ]; then
             echo "No new data, nothing to commit";
@@ -51,7 +51,7 @@ jobs:
             echo "Git contents change, needs new commit"
             git config user.email baparham@gmail.com
             git config user.name Brad Parham
-            git add dep-data.json
+            git add index.json
             git commit -m "Update dependency data"
             git push
           fi
